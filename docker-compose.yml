@@ -1,0 +1,29 @@
+---
+version: '3'
+services:
+  llama-cpp-server:
+    container_name: llama-cpp-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # platforms:
+      #   - linux/amd64
+      #   - linux/arm64
+    image: dceoy/llama-cpp:latest
+    # platform: linux/arm64
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}:/models:ro
+    working_dir: /models
+    entrypoint:
+      - /opt/llamacpp/server
+    command:
+      - --port
+      - '8000'
+      - --host
+      - 0.0.0.0
+      - -n
+      - '512'
+      - -m
+      - /models/llama-2-7b-chat.Q4_K_M.gguf

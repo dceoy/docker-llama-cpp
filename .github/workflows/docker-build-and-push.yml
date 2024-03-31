@@ -1,0 +1,26 @@
+---
+name: CI to Docker Hub
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: Target platforms for build
+        required: false
+        default: linux/amd64
+jobs:
+  docker-build-and-push:
+    uses: dceoy/gh-actions-for-devops/.github/workflows/docker-build-and-push.yml@main
+    with:
+      registry: docker.io
+      image-name: ${{ github.repository }}
+      platforms: ${{ inputs.platforms || 'linux/amd64' }}
+      context: .
+      file: ./Dockerfile
+      push: true
+      scan-after-build: false
+    secrets:
+      DOCKER_USER: ${{ github.actor }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
